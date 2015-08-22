@@ -1,0 +1,29 @@
+// Fill in these credentials and rename this file to config.js
+
+var config = {
+    reddit: {
+        // get these by creating an application at https://www.reddit.com/prefs/apps/
+        appKey: '', 
+        secret: '',
+
+        // the credentials for the user who is going to post
+        username: '',
+        password: '', 
+
+        // the subreddit to which to post
+        subreddit: 'NewMusicFriday' 
+    },
+    spotify: {
+        client: {
+            // Get these from https://developer.spotify.com/my-applications/#!/applications/create
+            id: '', 
+            secret: ''
+        },
+        playlist: { 
+            // Example for https://open.spotify.com/user/spotify/playlist/1yHZ5C3penaxRdWR7LRIOb
+            user: 'spotify',
+            id: '1yHZ5C3penaxRdWR7LRIOb'
+        }
+    }
+};
+module.exports = config;
