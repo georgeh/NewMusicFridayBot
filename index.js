@@ -19,7 +19,7 @@ var reddit = new Snoocore({
     secret: config.reddit.secret,
     username: config.reddit.username,
     password: config.reddit.password,
-    scope: [ 'submit' ]
+    scope: [ 'submit', 'modposts' ]
   }
 });
 
@@ -53,13 +53,17 @@ function postPlaylist(spotifyRes) {
             if (errors.length > 0) {
                 return Promise.reject(errors);
             }
-            spotifyRes.reddit = redditPostRes;
-            return spotifyRes;
-        });
+            
+            return {
+                spotify: spotifyRes,
+                reddit: redditPostRes
+            };
+        })
+        .then(stickyPost);
 }
 
 function postTracksToPlaylist(response) {
-    return Promise.all(response.body.tracks.items.map(function(item) {
+    return Promise.all(response.spotify.body.tracks.items.map(function(item) {
         var artists = item.track.artists.map(function (a) { return a.name; }).join(', ');
         var title = artists + ' - ' + item.track.name;
 
@@ -73,4 +77,15 @@ function postTracksToPlaylist(response) {
                 return(arguments);
             });
     }));
+}
+
+function stickyPost(response) {
+    return reddit('/api/set_subreddit_sticky').post({
+            id: response.reddit.json.data.name,
+            num: 1,
+            state: true
+        })
+        .then(function() {
+            return response;
+        });
 }
